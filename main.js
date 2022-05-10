@@ -1,52 +1,43 @@
-function limparFormulario (endereco) {
-    document.getElementById('rua').value = ''
-    document.getElementById('numero').value = '' 
-    document.getElementById('bairro').value = ''
-    document.getElementById('estado').value = ''
-    document.getElementById('cidade').value = ''
+'use strict';
+
+const limparFormulario = (endereco) =>{
+    document.getElementById('endereco').value = '';
+    document.getElementById('bairro').value = '';
+    document.getElementById('cidade').value = '';
+    document.getElementById('estado').value = '';
 }
 
-function preencherFormulario (endereco) {
-    document.getElementById('rua').value = endereco.logradouro
-    document.getElementById('bairro').value = endereco.bairro
-    document.getElementById('estado').value = endereco.uf
-    document.getElementById('cidade').value = endereco.localidade
+
+const preencherFormulario = (endereco) =>{
+    document.getElementById('endereco').value = endereco.logradouro;
+    document.getElementById('bairro').value = endereco.bairro;
+    document.getElementById('cidade').value = endereco.localidade;
+    document.getElementById('estado').value = endereco.uf;
 }
 
-function limparAviso (aviso) {
-    document.getElementById('cepn').style.display="none";
-    document.getElementById('cepin').style.display="none";
 
-}
+const eNumero = (numero) => /^[0-9]+$/.test(numero);
 
-const cepValido = (cep) => cep.length == 8 && /^[0-9]+$/.test(cep);
+const cepValido = (cep) => cep.length == 8 && eNumero(cep); 
 
-
-async function pesquisarCep () {
-    limparAviso();
+const pesquisarCep = async() => {
     limparFormulario();
-
-    const cep = document.getElementById('cep').value;
-    const url = `http://viacep.com.br/ws/${cep}/json/`;
-    //fetch(url).then(responde => responde.json()).then(console.log);
-    //const dados = await fetch(url);
-    //const endereco = await dados.json();
     
-    //Validando a informação
-    if (cepValido (cep)){
+    const cep = document.getElementById('cep').value;
+    const url = `https://viacep.com.br/ws/${cep}/json/`;
+    if (cepValido(cep)){
         const dados = await fetch(url);
         const endereco = await dados.json();
-
-        //Tratando caso de não ter o cep digitado
         if (endereco.hasOwnProperty('erro')){
-            document.getElementById('cepn').style.display="block";
-        }else{
-            preencherFormulario(endereco)
+            document.getElementById('endereco').value = 'CEP não encontrado!';
+        }else {
+            preencherFormulario(endereco);
         }
-
     }else{
-        document.getElementById('cepin').style.display="block";
+        document.getElementById('endereco').value = 'CEP incorreto!';
     }
+     
 }
 
-document.getElementById('cep').addEventListener('focusout', pesquisarCep);
+document.getElementById('cep')
+        .addEventListener('focusout',pesquisarCep);
