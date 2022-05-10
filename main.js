@@ -16,12 +16,17 @@ const preencherFormulario = (endereco) =>{
     document.getElementById('cidade').value = endereco.localidade;
 }
 
+function limparAviso (aviso) {
+    document.getElementById('cepn').style.display="none";
+    document.getElementById('cepin').style.display="none";
+}
 
 const eNumero = (numero) => /^[0-9]+$/.test(numero);
 
 const cepValido = (cep) => cep.length == 8 && eNumero(cep); 
 
 const pesquisarCep = async() => {
+    limparAviso();
     limparFormulario();
     
     const cep = document.getElementById('cep').value;
@@ -30,12 +35,12 @@ const pesquisarCep = async() => {
         const dados = await fetch(url);
         const endereco = await dados.json();
         if (endereco.hasOwnProperty('erro')){
-            document.getElementById('endereco').value = 'CEP não encontrado!';
+            document.getElementById('cepn').style.display="block";
         }else {
             preencherFormulario(endereco);
         }
     }else{
-        document.getElementById('endereco').value = 'CEP incorreto!';
+        document.getElementById('cepin').style.display="block";
     }
      
 }
