@@ -2,6 +2,7 @@
 
 const limparFormulario = (endereco) =>{
     document.getElementById('endereco').value = '';
+    document.getElementById('numero').value = '';
     document.getElementById('bairro').value = '';
     document.getElementById('estado').value = '';
     document.getElementById('cidade').value = '';
